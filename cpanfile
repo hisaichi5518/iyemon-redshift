@@ -5,3 +5,4 @@ requires "DateTime";
 requires "DateTime::Format::Strptime";
 requires "DBIx::Handler";
 requires "SQL::Maker";
+requires "DBD::Pg"
