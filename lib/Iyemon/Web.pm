@@ -20,21 +20,6 @@ sub sql_maker {
     state $sql_maker = SQL::Maker->new(driver => "Pg");
 }
 
-# handler->dbh->do("drop table action_logs");
-
-# handler->dbh->do(<<"...");
-#  CREATE TABLE action_logs (
-#    uid INTEGER NOT NULL DEFAULT 0,
-#    time INTEGER NOT NULL SORTKEY,
-#    type varchar(max),
-#    json varchar(max)
-#  );
-#...
-
-handler->dbh->do(<<"...");
-INSERT INTO action_logs (uid, time, type,json) VALUES (12, 1405555200, 'test.test.test', '{"test":"ほげー"}')
-...
-
 get '/' => sub {
     my ($self, $c) = @_;
 
