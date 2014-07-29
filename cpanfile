@@ -7,3 +7,4 @@ requires "DBIx::Handler";
 requires "SQL::Maker";
 requires "DBD::Pg";
 requires "Proclet";
+requires "Plack";
