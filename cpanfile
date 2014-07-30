@@ -8,3 +8,4 @@ requires "SQL::Maker";
 requires "DBD::Pg";
 requires "Proclet";
 requires "Plack";
+requires "Text::Xslate";
