@@ -11,3 +11,4 @@ requires "Plack";
 requires "Text::Xslate";
 requires "Server::Starter";
 requires "Starlet";
+requires "Digest::SHA1";

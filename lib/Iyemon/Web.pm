@@ -10,6 +10,7 @@ use DateTime::Format::Strptime;
 use Iyemon::Config;
 use DBIx::Handler;
 use SQL::Maker;
+use Digest::SHA1;
 
 my $handler = DBIx::Handler->new(@{config->param("DBIx::Handler")});
 sub handler {
@@ -64,7 +65,8 @@ sub _build {
     for my $hashref (@$obj) {
         $hashref->{time} = DateTime->from_epoch(
             epoch => $hashref->{time},
-        )->strftime("%Y-%m-%d %H:%M:%S")
+        )->strftime("%Y-%m-%d %H:%M:%S");
+        $hashref->{_id} = Digest::SHA1::sha1_hex(rand(100000) . $$ . {} . $hashref->{time});
     }
     $obj;
 }
