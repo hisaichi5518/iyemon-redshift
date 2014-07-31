@@ -9,4 +9,5 @@ requires "DBD::Pg";
 requires "Proclet";
 requires "Plack";
 requires "Text::Xslate";
-requires "Server::Starter"
+requires "Server::Starter";
+requires "Starlet";
