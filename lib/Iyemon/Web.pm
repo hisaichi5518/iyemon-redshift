@@ -39,10 +39,11 @@ get '/search' => sub {
 
     my $strp = DateTime::Format::Strptime->new(pattern => '%Y-%m-%dT%H:%M');
     push @where, (
-        time => {
-            ">=" => $strp->parse_datetime($start_date)->epoch,
-            "<=" => $strp->parse_datetime($end_date)->epoch,
-        },
+        time => [
+            "-and",
+            { ">=" => $strp->parse_datetime($start_date)->epoch },
+            { "<=" => $strp->parse_datetime($end_date)->epoch },
+        ],
     );
 
     my $page  = $c->req->param("page");
@@ -51,7 +52,7 @@ get '/search' => sub {
     my ($sql, @binds) = sql_maker->select("action_logs",
         ["uid", "time", "type", "json"],
         \@where,
-        {limit => $limit, offset => $limit - 100},
+        {order_by => "time", limit => $limit, offset => $limit - 100},
     );
 
     my ($rows) = handler->dbh->selectall_arrayref($sql, {Slice => {}}, @binds);
