@@ -7,6 +7,7 @@ use Kossy;
 use Scalar::Util qw/looks_like_number blessed/;
 use DateTime;
 use DateTime::Format::Strptime;
+use DateTime::TimeZone;
 use Iyemon::Config;
 use DBIx::Handler;
 use SQL::Maker;
@@ -19,6 +20,10 @@ sub handler {
 
 sub sql_maker {
     state $sql_maker = SQL::Maker->new(driver => "Pg");
+}
+
+sub time_zone {
+    state $time_zone = DateTime::TimeZone->new(name => config->param("time_zone"));
 }
 
 get '/' => sub {
@@ -35,9 +40,12 @@ get '/search' => sub {
         qw(uid type);
 
     my $start_date = $c->req->param("start_date") or $c->halt(400);
-    my $end_date   = $c->req->param("end_date" )  || DateTime->now;
+    my $end_date   = $c->req->param("end_date" )  || DateTime->now(time_zone => time_zone());
 
-    my $strp = DateTime::Format::Strptime->new(pattern => '%Y-%m-%dT%H:%M');
+    my $strp = DateTime::Format::Strptime->new(
+        pattern   => '%Y-%m-%dT%H:%M',
+        time_zone => time_zone(),
+    );
     push @where, (
         time => {
             ">=" => $strp->parse_datetime($start_date)->epoch,
@@ -64,7 +72,8 @@ sub _build {
 
     for my $hashref (@$obj) {
         $hashref->{time} = DateTime->from_epoch(
-            epoch => $hashref->{time},
+            epoch     => $hashref->{time},
+            time_zone => time_zone(),
         )->strftime("%Y-%m-%d %H:%M:%S");
         $hashref->{_id} = Digest::SHA1::sha1_hex(rand(100000) . $$ . {} . $hashref->{time});
     }
