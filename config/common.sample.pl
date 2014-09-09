@@ -7,4 +7,5 @@
     boostrap => {
         web => ['-p' => 50004],
     },
+    time_zone => 'Asia/Tokyo',
 }
