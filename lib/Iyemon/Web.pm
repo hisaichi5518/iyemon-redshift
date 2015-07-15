@@ -36,12 +36,12 @@ get '/search' => sub {
     my ($self, $c) = @_;
 
     my @where;
-    for my $param (qw(uid type)) {
-        my $value = scalar $c->req->param($_);
+    for my $key (qw(uid type)) {
+        my $value = scalar $c->req->param($key);
         next unless $value;
 
         push @where, (
-            $param => { "-in" => [ split(/,/, $value) ] }
+            $key => { "-in" => [ split(/,/, $value) ] }
         );
     }
 
