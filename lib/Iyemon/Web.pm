@@ -35,9 +35,15 @@ get '/' => sub {
 get '/search' => sub {
     my ($self, $c) = @_;
 
-    my @where = map { $_ => scalar $c->req->param($_) }
-        grep { scalar $c->req->param($_) }
-        qw(uid type);
+    my @where;
+    for my $key (qw(uid type)) {
+        my $value = scalar $c->req->param($key);
+        next unless $value;
+
+        push @where, (
+            $key => { "-in" => [ split(/,/, $value) ] }
+        );
+    }
 
     my $start_date = $c->req->param("start_date") or $c->halt(400);
     my $end_date   = $c->req->param("end_date" )  || DateTime->now(time_zone => time_zone());
